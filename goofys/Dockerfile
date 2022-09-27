@@ -16,8 +16,12 @@ FROM debian:bullseye
 
 LABEL org.opencontainers.image.source https://github.com/danielsig727/dockerfiles
 
-RUN apt-get update && apt-get install -y fuse
+RUN apt-get update && apt-get install -y fuse ca-certificates openssl syslog-ng coreutils
 
 COPY --from=builder /root/goofys/goofys /usr/local/bin
 
-CMD goofys
+COPY syslog-ng.conf /etc/syslog-ng/syslog-ng.conf
+COPY run.sh /root
+WORKDIR /root
+
+ENTRYPOINT [ "/root/run.sh" ]
